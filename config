@@ -1,0 +1,273 @@
+# ******************************************************************************
+# Script Name: config
+# Description: The configuration file for the i3 window manager.
+# Author: makamat
+# Date: 2024-03-28
+# Version: 1.0
+# ******************************************************************************
+
+set $mod Mod1
+
+# Font for window titles and bar
+font pango:monospace 8
+
+# gaps between windows
+gaps inner 10px
+
+bindsym --whole-window $mod+button3 kill
+bindsym --whole-window $mod+Shift+button1 floating toggle
+bindsym --whole-window Ctrl+button3 fullscreen
+bindsym --release $mod+x exec --no-startup-id import /tmp/screenshot$(date "+%Y%m%d%H%M%S").png
+bindsym $mod+bracketleft workspace prev
+bindsym $mod+bracketright workspace next
+bindsym Ctrl+Return exec gimp
+bindsym Ctrl+$mod+Return exec inkscape
+bindsym $mod+comma exec htop
+bindsym XF86AudioNext exec xdotool type --window $(xdotool search --class cmus) ":player-next" && xdotool key --window $(xdotool search --class cmus) KP_Enter
+bindsym XF86AudioPause exec xdotool type --window $(xdotool search --class cmus) ":player-pause" && xdotool key --window $(xdotool search --class cmus) KP_Enter
+bindsym XF86AudioPrev exec xdotool type --window $(xdotool search --class cmus) ":player-prev" && xdotool key --window $(xdotool search --class cmus) KP_Enter
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 25
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 25
+bindsym XLookupString exec fvim
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# no-titles
+default_border pixel 3
+
+floating_modifier Mod1
+
+smart_borders on
+
+# Start XDG autostart .desktop files using dex.
+# See also: https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c 000000 -f --nofork
+
+#exec --no-startup-id xset s 10
+# hide cursor when typing
+exec unclutter --idle 1 --jitter 25
+
+exec keepassxc
+
+exec --no-startup-id feh --bg-fill "$HOME/wallpaper.png"
+
+# Home
+set $ws1 "H"
+
+# Work
+set $ws2 "W"
+
+# Password Manager
+set $ws3 "PM"
+
+# Music Player
+set $ws4 "MP"
+
+# File Manager
+set $ws5 "FM"
+
+# Graphics Editor
+set $ws6 "GE"
+
+#assign [ class="ST" ] $ws1
+#assign [ class="ST - W" ] $ws2
+assign [ class="KeePassXC" ] $ws3
+assign [ class="cmus" ] $ws4
+assign [ class="firefoxdeveloperedition" ] $ws2
+#assign [ class="ytfzf" ] $ws4
+assign [ class="Thunar" ] $ws5
+assign [ class="Gimp" ] $ws6
+assign [ class="Inkscape" ] $ws6
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+
+bindsym $mod+x move workspace to output next
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+#bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 25
+#bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 25
+bindsym $mod+Return exec st -c "ST"
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec --no-startup-id dmenu-recent-aliases
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+n split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+o workspace $ws2; exec firefox-developer-edition
+bindsym $mod+c exec speedcrunch
+bindsym $mod+g exec fvifm
+bindsym $mod+i exec kmag
+bindsym $mod+m exec neomutt
+bindsym $mod+o workspace $ws1; exec firefox -P home
+bindsym $mod+p exec gpick
+bindsym $mod+q exec i3lock -c 000000 -f
+bindsym $mod+r mode "resize"
+bindsym $mod+space focus mode_toggle 
+bindsym $mod+t exec cmus; workspace $ws4
+bindsym $mod+u exec kruler
+bindsym $mod+z exec fvim
+bindsym --release $mod+Shift+End exec --no-startup-id import screenshot_$(uuidgen).png
+
+for_window [class="cmus"] workspace $ws4
+
+for_window [class="feh"] floating enable
+for_window [class="feh"] move position center
+
+for_window [class="firefoxdeveloperedition" title="Developer Tools"] floating enable
+for_window [class="firefoxdeveloperedition" title="Developer Tools"] resize set 1000px 400px
+for_window [class="firefoxdeveloperedition" title="Developer Tools"] move position center
+
+for_window [class="Gifview"] floating enable
+for_window [class="Gifview"] move position center 
+
+for_window [class="Gpick"] floating enable
+for_window [class="Gpick"] resize set 800px 500px
+for_window [class="Gpick"] move position center 
+
+for_window [class="KeePassXC" title="^KeePassXC$"] workspace $ws3
+for_window [class="KeePassXC" title="Auto-Type"] move container to workspace current
+for_window [class="KeePassXC" title="Pick Characters"] move position 100px 100px
+for_window [class="KeePassXC" title="Pick Characters"] move container to workspace current
+for_window [class="KeePassXC" title="Unlock Database"] move position center
+for_window [class="KeePassXC" title="Unlock Database"] move container to workspace current
+
+for_window [class="kmag"] floating enable
+for_window [class="kmag"] resize set 500px 300px
+for_window [class="kmag"] move position 100px 100px
+
+for_window [class="kruler"] floating enable
+for_window [class="kruler"] resize set 600px
+for_window [class="kruler"] move position center
+
+for_window [class="matplotlib"] floating enable
+for_window [class="matplotlib"] resize set 800px 600px
+for_window [class="matplotlib"] move position 100px 100px
+
+for_window [class="mpv"] floating enable
+for_window [class="mpv"] resize set 400px 400px
+for_window [class="mpv"] move position center
+
+for_window [class="neomutt"] floating enable
+for_window [class="neomutt"] resize set 600px 400px
+for_window [class="neomutt"] move position center
+
+for_window [class="Nsxiv"] floating enable
+for_window [class="Nsxiv"] resize set 700px 400px
+for_window [class="Nsxiv"] move position center
+
+for_window [class="SpeedCrunch"] floating enable
+for_window [class="SpeedCrunch"] resize set 250px 250px
+for_window [class="SpeedCrunch"] move position 100px 100px
+
+for_window [class="Thunar"] workspace $ws5
+
+for_window [class="Xsane"] floating enable
+for_window [class="Xsane"] resize set 298px 430px
+for_window [class="Xsane"] move position center
+for_window [class="Xsane" title="multipage"] resize set 350px 400px 
+for_window [class="Xsane" title="multipage"] move position 0px 0px
+for_window [class="Xsane" title="Preview"] move position 0px 350px
+for_window [class="Xsane" title="Viewer"] fullscreen
+for_window [class="Xsane" title="Viewer"] resize set 800px 900px
+for_window [class="Xsane" title="Viewer"] move position center
+
+for_window [class="vim"] floating enable
+for_window [class="vim"] resize set 600px 400px 
+for_window [class="vim"] move position center
+
+for_window [class="ST"] floating enable
+for_window [class="ST"] resize set 600px 250px 
+for_window [class="ST"] move position center
+
+for_window [class="vifm"] floating enable
+for_window [class="vifm"] resize set 1000px 396px 
+for_window [class="vifm"] move position center
+
+for_window [class="Zathura"] floating enable
+for_window [class="Zathura"] resize set 500px 700px
+for_window [class="Zathura"] move position 100px 100px
+
+for_window [class="ytfzf"] floating enable
+for_window [class="ytfzf"] resize set 700px 400px
+for_window [class="ytfzf"] move position center 
+#for_window [class="ytfzf"] workspace $ws4
+
+for_window [class="ffplay"] floating enable
+for_window [class="ffplay"] move position center 
+
+for_window [class="htop"] floating enable
+for_window [class="htop"] resize set 800px 500px
+for_window [class="htop"] move position center 
+
+for_window [class="scrcpy"] floating enable
+
+for_window [class="org-languagetool-gui-Main"] floating enable
+for_window [class="org-languagetool-gui-Main"] resize set 650px 500px
+for_window [class="org-languagetool-gui-Main"] move position center
+
+for_window [class="firefox" title="^Library$"] floating enable
+for_window [class="firefox" title="^Library$"] resize set 900px 500px
+for_window [class="firefox" title="^Library$"] move position center
+
+mode "resize" {
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        bindsym $mod+r mode "default"
+        bindsym Escape mode "default"
+        bindsym Return mode "default"
+}
+
+bar {
+       tray_output none
+       bindsym --release button3 exec --no-startup-id import /tmp/screenshot$(date "+%Y%m%d%H%M%S").png
+       colors {
+         background #000000
+         statusline #aaaaaa
+         separator #333333
+         focused_workspace #aaaaaa #ffffff #333333
+         active_workspace #aaaaaa #ffffff #333333
+         inactive_workspace #000000 #000000 #aaaaaa
+       }
+       status_command i3blocks
+}
